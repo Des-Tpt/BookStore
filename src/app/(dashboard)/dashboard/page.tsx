@@ -4,13 +4,13 @@ import { addCategory, deleteCategory, editCategory, fetchCategories } from "@/ac
 import { addUser, deleteUser, editUser, fetchUser } from "@/action/userAction";
 import BooksPage from "@/components/Dashboard/Books";
 import CategoriesPage from "@/components/Dashboard/Categories";
-import Header from "@/components/Dashboard/Header";
 import DashboardOverview from "@/components/Dashboard/Overview";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import UsersPage from "@/components/Dashboard/User";
 import { Book } from "@/type/Book";
 import { Category } from "@/type/Categories";
 import { User } from "@/type/User";
+import { set } from "mongoose";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
@@ -22,6 +22,7 @@ const AdminDashboard = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(true);
 
     const fetchData = async () => {
         try {
@@ -42,6 +43,8 @@ const AdminDashboard = () => {
             }
         } catch {
             toast.error('Lỗi khi tải dữ liệu!');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -173,6 +176,25 @@ const AdminDashboard = () => {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!categories || !books || !users) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex items-center justify-center">
+                <p className="text-gray-600">Không thể tải dữ liệu</p>
+            </div>
+        );
+    }
+
     return (
         <div className="flex h-screen bg-gray-50">
             <Sidebar
@@ -190,8 +212,6 @@ const AdminDashboard = () => {
             )}
 
             <div className="flex-1 flex flex-col overflow-hidden">
-                <Header setSidebarOpen={setSidebarOpen} />
-
                 <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
                     {renderCurrentPage()}
                 </main>

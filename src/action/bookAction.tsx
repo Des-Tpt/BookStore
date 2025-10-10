@@ -28,6 +28,7 @@ export const addBook = async (bookData: Partial<Book>): Promise<boolean> => {
             toast.error(result.error || 'Có lỗi xảy ra khi thêm sách!');
             return false;
         }
+        
     } catch (error) {
         console.error('Error adding book:', error);
         toast.error('Có lỗi xảy ra khi thêm sách!');
