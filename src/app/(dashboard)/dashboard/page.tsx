@@ -2,15 +2,17 @@
 import { addBook, deleteBook, editBook, fetchBooks } from "@/action/bookAction";
 import { addCategory, deleteCategory, editCategory, fetchCategories } from "@/action/categoryAction";
 import { addUser, deleteUser, editUser, fetchUser } from "@/action/userAction";
+import { fetchInvoices, updateInvoice } from "@/action/invoiceAction";
 import BooksPage from "@/components/Dashboard/Books";
 import CategoriesPage from "@/components/Dashboard/Categories";
 import DashboardOverview from "@/components/Dashboard/Overview";
+import InvoicesPage from "@/components/Dashboard/Invoices";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import UsersPage from "@/components/Dashboard/User";
 import { Book } from "@/type/Book";
 import { Category } from "@/type/Categories";
 import { User } from "@/type/User";
-import { set } from "mongoose";
+import { Invoice } from "@/type/Invoice";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
@@ -20,15 +22,20 @@ const AdminDashboard = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [users, setUsers] = useState<User[]>([]);
+    const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [selectedStatus, setSelectedStatus] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchData = async () => {
         try {
-            const book = await fetchBooks();
-            const categories = await fetchCategories();
-            const user = await fetchUser();
+            const [book, categories, user, invoices] = await Promise.all([
+                fetchBooks(),
+                fetchCategories(),
+                fetchUser(),
+                fetchInvoices()
+            ]);
 
             if (categories) {
                 setCategories(categories);
@@ -40,6 +47,10 @@ const AdminDashboard = () => {
 
             if (user) {
                 setUsers(user);
+            }
+
+            if (invoices) {
+                setInvoices(invoices);
             }
         } catch {
             toast.error('Lỗi khi tải dữ liệu!');
@@ -124,6 +135,17 @@ const AdminDashboard = () => {
         return result;
     }
 
+    const handleUpdateInvoice = async (invoiceId: string, data: any) => {
+        const result = await updateInvoice(invoiceId, data);
+        if (result) {
+            await fetchData();
+            toast.success('Cập nhật hóa đơn thành công!');
+        } else {
+            toast.error('Lỗi khi cập nhật hóa đơn!');
+        }
+        return result;
+    }
+
     const renderCurrentPage = () => {
         switch (activeTab) {
             case 'books':
@@ -153,10 +175,23 @@ const AdminDashboard = () => {
                     />
                 );
 
+            case 'invoices':
+                return (
+                    <InvoicesPage
+                        invoices={invoices}
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        selectedStatus={selectedStatus}
+                        setSelectedStatus={setSelectedStatus}
+                        onUpdateInvoice={handleUpdateInvoice}
+                    />
+                );
+
             case 'overview':
                 return (
                     <DashboardOverview />
                 );
+
             case 'users':
                 return (
                     <UsersPage
@@ -187,7 +222,7 @@ const AdminDashboard = () => {
         );
     }
 
-    if (!categories || !books || !users) {
+    if (!categories || !books || !users || !invoices) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 flex items-center justify-center">
                 <p className="text-gray-600">Không thể tải dữ liệu</p>

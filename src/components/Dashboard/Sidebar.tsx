@@ -1,6 +1,6 @@
 'use client'
 import { User as UserType } from '@/type/User';
-import { BookOpen, Grid3X3, LayoutDashboard, User, X, LogOut, ChevronDown, Settings } from 'lucide-react';
+import { BookOpen, Grid3X3, LayoutDashboard, User, X, LogOut, ChevronDown, Settings, PanelLeftInactiveIcon } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { Dispatch, SetStateAction, use, useEffect, useState } from 'react';
@@ -49,14 +49,16 @@ const Sidebar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Sideb
             <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-indigo-600/10"></div>
                 <div className="relative flex items-center justify-between h-20 px-6 bg-white/70 backdrop-blur-sm border-b border-gray-200/50">
-                    <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg">
-                            <BookOpen className="h-6 w-6 text-white" />
+                    <a href='\'>
+                        <div className="flex items-center space-x-3">
+                            <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg">
+                                <BookOpen className="h-6 w-6 text-white" />
+                            </div>
+                            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                                BookStore
+                            </h1>
                         </div>
-                        <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                            BookStore
-                        </h1>
-                    </div>
+                    </a>
                     <button
                         onClick={() => setSidebarOpen(false)}
                         className="lg:hidden text-gray-700 hover:bg-gradient-to-r hover:from-red-100 hover:to-pink-100 p-2 rounded-xl transition-all duration-200 hover:shadow-md"
@@ -146,6 +148,25 @@ const Sidebar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Sideb
                     </div>
                     Quản lý Người dùng
                     {activeTab === 'users' && (
+                        <div className="ml-auto w-1.5 h-1.5 bg-white rounded-full"></div>
+                    )}
+                </button>
+
+                <button
+                    onClick={() => handleNavigation('invoices')}
+                    className={`group w-full flex items-center px-4 py-3.5 text-left text-sm font-medium rounded-xl transition-all duration-200 ${activeTab === 'invoices'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 scale-[1.02]'
+                        : 'text-gray-600 hover:bg-white/70 hover:backdrop-blur-sm hover:shadow-md hover:text-gray-900'
+                        }`}
+                >
+                    <div className={`p-2 rounded-lg mr-3 transition-all duration-200 ${activeTab === 'invoices'
+                        ? 'bg-white/20'
+                        : 'bg-gradient-to-r from-blue-100 to-purple-100 group-hover:shadow-md'
+                        }`}>
+                        <PanelLeftInactiveIcon size={18} />
+                    </div>
+                    Quản lý Hóa đơn
+                    {activeTab === 'invoices' && (
                         <div className="ml-auto w-1.5 h-1.5 bg-white rounded-full"></div>
                     )}
                 </button>

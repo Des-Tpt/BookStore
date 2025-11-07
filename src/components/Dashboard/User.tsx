@@ -105,6 +105,8 @@ const UserRow = memo(({
     </tr>
 ));
 
+UserRow.displayName = 'UserRow';
+
 const UsersPage = ({
     users,
     searchTerm,
@@ -257,28 +259,46 @@ const UsersPage = ({
                 </div>
             </div>
 
-            <UserFormPopup
-                isOpen={showAddForm}
-                onClose={() => setShowAddForm(false)}
-                onSubmit={handleAddUser}
-                isEdit={false}
-            />
+            {/* Add User Modal */}
+            <div className={`fixed inset-0 z-50 ${showAddForm ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${showAddForm ? 'opacity-50' : 'opacity-0'}`} onClick={() => setShowAddForm(false)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${showAddForm ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <UserFormPopup
+                        isOpen={showAddForm}
+                        onClose={() => setShowAddForm(false)}
+                        onSubmit={handleAddUser}
+                        isEdit={false}
+                    />
+                </div>
+            </div>
 
-            <UserFormPopup
-                user={editUser}
-                isOpen={!!editUser}
-                onClose={() => setEditUser(null)}
-                onSubmit={handleUpdateUser}
-                isEdit={true}
-            />
+            {/* Edit User Modal */}
+            <div className={`fixed inset-0 z-50 ${editUser ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${editUser ? 'opacity-50' : 'opacity-0'}`} onClick={() => setEditUser(null)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${editUser ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <UserFormPopup
+                        user={editUser}
+                        isOpen={!!editUser}
+                        onClose={() => setEditUser(null)}
+                        onSubmit={handleUpdateUser}
+                        isEdit={true}
+                    />
+                </div>
+            </div>
 
-            <UserDeletePopup
-                user={deleteUser}
-                isOpen={!!deleteUser}
-                onClose={() => setDeleteUser(null)}
-                onConfirm={handleConfirmDelete}
-                isDeleting={isDeleting}
-            />
+            {/* Delete User Modal */}
+            <div className={`fixed inset-0 z-50 ${deleteUser ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${deleteUser ? 'opacity-50' : 'opacity-0'}`} onClick={() => setDeleteUser(null)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${deleteUser ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <UserDeletePopup
+                        user={deleteUser}
+                        isOpen={!!deleteUser}
+                        onClose={() => setDeleteUser(null)}
+                        onConfirm={handleConfirmDelete}
+                        isDeleting={isDeleting}
+                    />
+                </div>
+            </div>
 
         </div>
     );
