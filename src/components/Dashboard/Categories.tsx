@@ -117,7 +117,7 @@ const CategoriesPage = ({
         if (deleteCategory && onDeleteCategory) {
             setIsDeleting(true);
             try {
-                await onDeleteCategory(deleteCategory._id);
+                onDeleteCategory(deleteCategory._id);
                 setDeleteCategory(null);
             } catch (error) {
                 console.error('Error deleting category:', error);
@@ -213,29 +213,43 @@ const CategoriesPage = ({
                     </div>
                 </div>
             </div>
+            <div className={`fixed inset-0 z-50 ${showAddForm ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${showAddForm ? 'opacity-50' : 'opacity-0'}`} onClick={() => setShowAddForm(false)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${showAddForm ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <CategoryFormPopup
+                        isOpen={showAddForm}
+                        onClose={() => setShowAddForm(false)}
+                        onSubmit={handleAddCategory}
+                        isEdit={false}
+                    />
+                </div>
+            </div>
 
-            <CategoryFormPopup
-                isOpen={showAddForm}
-                onClose={() => setShowAddForm(false)}
-                onSubmit={handleAddCategory}
-                isEdit={false}
-            />
+            <div className={`fixed inset-0 z-50 ${editCategory ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${editCategory ? 'opacity-50' : 'opacity-0'}`} onClick={() => setEditCategory(null)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${editCategory ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <CategoryFormPopup
+                        category={editCategory}
+                        isOpen={!!editCategory}
+                        onClose={() => setEditCategory(null)}
+                        onSubmit={handleUpdateCategory}
+                        isEdit={true}
+                    />
+                </div>
+            </div>
 
-            <CategoryFormPopup
-                category={editCategory}
-                isOpen={!!editCategory}
-                onClose={() => setEditCategory(null)}
-                onSubmit={handleUpdateCategory}
-                isEdit={true}
-            />
-
-            <CategoryDeletePopup
-                category={deleteCategory}
-                isOpen={!!deleteCategory}
-                onClose={() => setDeleteCategory(null)}
-                onConfirm={handleConfirmDelete}
-                isDeleting={isDeleting}
-            />
+            <div className={`fixed inset-0 z-50 ${deleteCategory ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${deleteCategory ? 'opacity-50' : 'opacity-0'}`} onClick={() => setDeleteCategory(null)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${deleteCategory ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <CategoryDeletePopup
+                        category={deleteCategory}
+                        isOpen={!!deleteCategory}
+                        onClose={() => setDeleteCategory(null)}
+                        onConfirm={handleConfirmDelete}
+                        isDeleting={isDeleting}
+                    />
+                </div>
+            </div>
         </div>
     );
 };
