@@ -1,6 +1,7 @@
 import connectDB from "@/lib/mongodb";
 import User from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
     try {
@@ -18,7 +19,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: false, error: "Vui lòng nhập đầy đủ các dữ liệu cần thiết" }, { status: 400 });
         }
 
-        await User.create({ name, email, password, role, address, phone });
+        const hashedPassword = await bcrypt.hash(password as string, 10);
+
+        await User.create({ name, email, hashedPassword, role, address, phone });
         return NextResponse.json({ success: true });
     } catch (err) {
         console.error(err);

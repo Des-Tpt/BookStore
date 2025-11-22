@@ -285,36 +285,56 @@ const BooksPage = ({
                 </div>
             </div>
 
-            <BookViewPopup
-                book={viewBook}
-                isOpen={!!viewBook}
-                onClose={() => setViewBook(null)}
-            />
+            <div className={`fixed inset-0 z-50 ${viewBook ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${viewBook ? 'opacity-50' : 'opacity-0'}`} onClick={() => setViewBook(null)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${viewBook ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <BookViewPopup
+                        book={viewBook}
+                        isOpen={!!viewBook}
+                        onClose={() => setViewBook(null)}
+                    />
+                </div>
+            </div>
 
-            <BookFormPopup
-                categories={categories}
-                isOpen={showAddForm}
-                onClose={() => setShowAddForm(false)}
-                onSubmit={handleAddBook}
-                isEdit={false}
-            />
+            <div className={`fixed inset-0 z-50 ${showAddForm ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${showAddForm ? 'opacity-50' : 'opacity-0'}`} onClick={() => setShowAddForm(false)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${showAddForm ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <BookFormPopup
+                        categories={categories}
+                        isOpen={showAddForm}
+                        onClose={() => setShowAddForm(false)}
+                        onSubmit={handleAddBook}
+                        isEdit={false}
+                    />
+                </div>
+            </div>
 
-            <BookFormPopup
-                book={editBook}
-                categories={categories}
-                isOpen={!!editBook}
-                onClose={() => setEditBook(null)}
-                onSubmit={handleUpdateBook}
-                isEdit={true}
-            />
+            <div className={`fixed inset-0 z-50 ${editBook ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${editBook ? 'opacity-50' : 'opacity-0'}`} onClick={() => setEditBook(null)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${editBook ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <BookFormPopup
+                        book={editBook}
+                        categories={categories}
+                        isOpen={!!editBook}
+                        onClose={() => setEditBook(null)}
+                        onSubmit={handleUpdateBook}
+                        isEdit={true}
+                    />
+                </div>
+            </div>
 
-            <BookDeletePopup
-                book={deleteBook}
-                isOpen={!!deleteBook}
-                onClose={() => setDeleteBook(null)}
-                onConfirm={handleConfirmDelete}
-                isDeleting={isDeleting}
-            />
+            <div className={`fixed inset-0 z-50 ${deleteBook ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${deleteBook ? 'opacity-50' : 'opacity-0'}`} onClick={() => setDeleteBook(null)} />
+                <div className={`absolute inset-0 flex items-center justify-center p-4 transition-all duration-300 ${deleteBook ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <BookDeletePopup
+                        book={deleteBook}
+                        isOpen={!!deleteBook}
+                        onClose={() => setDeleteBook(null)}
+                        onConfirm={handleConfirmDelete}
+                        isDeleting={isDeleting}
+                    />
+                </div>
+            </div>
         </div>
     );
 };
