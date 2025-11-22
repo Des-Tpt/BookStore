@@ -116,3 +116,31 @@ export const deleteUser = async (userId: string): Promise<boolean> => {
         return false;
     }
 };
+
+export const registerUser = async (userData: Partial<User>): Promise<boolean> => {
+    try {
+        const formData = new FormData();
+        if (userData.name) formData.append('name', userData.name);
+        if (userData.email) formData.append('email', userData.email);
+        if (userData.password) formData.append('password', userData.password);
+
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            toast.success(result.message || 'Đăng ký thành công!');
+            return true;
+        } else {
+            toast.error(result.message || 'Có lỗi xảy ra khi đăng ký!');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error registering user:', error);
+        toast.error('Có lỗi xảy ra khi đăng ký!');
+        return false;
+    }
+}

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Book from '@/model/Book';
 import User from '@/model/User';
+import bcrypt from 'bcryptjs';
 
 export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
     try {
@@ -35,7 +36,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ us
         const updateData: any = {};
         for (const [key, value] of formData.entries()) {
             if (value !== null && value !== "") {
-                updateData[key] = value;
+                if (key === "password") {
+                    const hashedPassword = await bcrypt.hash(value as string, 10);
+                    updateData["password"] = hashedPassword;
+                } else {
+                    updateData[key] = value;
+                }
             }
         }
 
@@ -46,7 +52,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ us
         }
 
         return NextResponse.json({ success: true });
-
     } catch (error) {
         return NextResponse.json(
             { error: 'Lỗi khi cập nhật người dùng!' },
